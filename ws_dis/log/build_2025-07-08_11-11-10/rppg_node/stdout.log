@@ -1,0 +1,21 @@
+running develop
+running egg_info
+creating rppg_node.egg-info
+writing rppg_node.egg-info/PKG-INFO
+writing dependency_links to rppg_node.egg-info/dependency_links.txt
+writing entry points to rppg_node.egg-info/entry_points.txt
+writing requirements to rppg_node.egg-info/requires.txt
+writing top-level names to rppg_node.egg-info/top_level.txt
+writing manifest file 'rppg_node.egg-info/SOURCES.txt'
+reading manifest file 'rppg_node.egg-info/SOURCES.txt'
+writing manifest file 'rppg_node.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages/rppg-node.egg-link (link to .)
+
+Installed /home/mscrobotics2425laptop11/ws_dis/build/rppg_node
+running symlink_data
+creating /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/share/ament_index
+creating /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/share/ament_index/resource_index
+creating /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/share/ament_index/resource_index/packages
+symbolically linking /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/resource/rppg_node -> /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/share/ament_index/resource_index/packages
+symbolically linking /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/package.xml -> /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/share/rppg_node

@@ -1,0 +1,29 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/manip_control/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_xs_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_perception_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_xs_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_perception_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_moveit_interface_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_common_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/apriltag_ws/install/apriltag_ros/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/manip_control/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_xs_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_perception_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_xs_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_perception_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_moveit_interface_msgs/local/lib/python3.10/dist-packages",
+        "/home/mscrobotics2425laptop11/interbotix_ws/install/interbotix_common_modules/lib/python3.10/site-packages",
+        "/home/mscrobotics2425laptop11/apriltag_ws/install/apriltag_ros/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "ros.distro": "humble"
+}

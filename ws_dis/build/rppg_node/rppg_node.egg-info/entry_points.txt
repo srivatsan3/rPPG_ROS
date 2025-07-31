@@ -1,0 +1,3 @@
+[console_scripts]
+rppg_node = rppg_node.wrapper:main
+

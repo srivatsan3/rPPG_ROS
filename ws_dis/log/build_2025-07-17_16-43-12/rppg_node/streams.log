@@ -1,0 +1,21 @@
+[0.460s] Invoking command in '/home/mscrobotics2425laptop11/ws_dis/src/rppg_node': CONDA_PROMPT_MODIFIER=(base) PS1=(rppg_env) (base) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/mscrobotics2425laptop11/ws_dis/build/rppg_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(rppg_env) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rppg_node build --build-base /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/build install --record /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/install.log --single-version-externally-managed install_data
+[0.628s] running egg_info
+[0.634s] writing ../../build/rppg_node/rppg_node.egg-info/PKG-INFO
+[0.634s] writing dependency_links to ../../build/rppg_node/rppg_node.egg-info/dependency_links.txt
+[0.634s] writing entry points to ../../build/rppg_node/rppg_node.egg-info/entry_points.txt
+[0.634s] writing requirements to ../../build/rppg_node/rppg_node.egg-info/requires.txt
+[0.634s] writing top-level names to ../../build/rppg_node/rppg_node.egg-info/top_level.txt
+[0.636s] reading manifest file '../../build/rppg_node/rppg_node.egg-info/SOURCES.txt'
+[0.637s] writing manifest file '../../build/rppg_node/rppg_node.egg-info/SOURCES.txt'
+[0.637s] running build
+[0.637s] running build_py
+[0.637s] running install
+[0.637s] running install_lib
+[0.638s] running install_data
+[0.638s] running install_egg_info
+[0.640s] removing '/home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages/rppg_node-0.0.0-py3.10.egg-info' (and everything under it)
+[0.640s] Copying ../../build/rppg_node/rppg_node.egg-info to /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages/rppg_node-0.0.0-py3.10.egg-info
+[0.641s] running install_scripts
+[0.657s] Installing rppg_node script to /home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/rppg_node
+[0.658s] writing list of installed files to '/home/mscrobotics2425laptop11/ws_dis/build/rppg_node/install.log'
+[0.681s] Invoked command in '/home/mscrobotics2425laptop11/ws_dis/src/rppg_node' returned '0': CONDA_PROMPT_MODIFIER=(base) PS1=(rppg_env) (base) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/mscrobotics2425laptop11/ws_dis/build/rppg_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/mscrobotics2425laptop11/ws_dis/install/rppg_node/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(rppg_env) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rppg_node build --build-base /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/build install --record /home/mscrobotics2425laptop11/ws_dis/build/rppg_node/install.log --single-version-externally-managed install_data
