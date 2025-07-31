@@ -1,4 +1,4 @@
-# Remote PolyPythesmoGraphy (rPPG) tool blended with ROS2 setup
+# Remote PolyPlethysmoGraphy (rPPG) tool blended with ROS2 setup
 
 ## ROS2 Nodes:
 The Robot Operating System 2 **Humble** version is used throughout.
