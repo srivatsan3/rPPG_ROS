@@ -9,7 +9,8 @@ import mediapipe as mp
 import numpy as np
 import sys
 import scipy
-sys.path.insert(0, '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox') 
+rppg_tb_path = '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'
+sys.path.insert(0, rppg_tb_path) 
 
 # Classical methods
 from unsupervised_methods.methods.CHROME_DEHAAN import CHROME_DEHAAN
@@ -39,12 +40,8 @@ class RPPGVideoNode(Node):
     def __init__(self):
         super().__init__('rppg_toolbox_video_node')
         self.publisher_ = self.create_publisher(Float32, 'heart_rate_bpm', 10)
-
-        # self.declare_parameter('video_path', '/home/mscrobotics2425laptop11/Dissertation/UBFC/RawData/subject1/vid.avi')
-        self.declare_parameter('video_path', '/home/mscrobotics2425laptop11/Dissertation/scamps_sample/P000001.mat')
+        self.video_path = '/home/mscrobotics2425laptop11/Dissertation/scamps_sample/P000001.mat'
         
-
-        self.video_path = self.get_parameter('video_path').get_parameter_value().string_value
         if self.video_path.split('.')[-1] == 'mat':
             data = mat73.loadmat(self.video_path)
             print(data.keys())
@@ -83,11 +80,11 @@ class RPPGVideoNode(Node):
         #         self.buffer.append(face_crop)
 
         # if not ret:
-        #     self.get_logger().info("📼 Video stream finished.")
+        #     self.get_logger().info("Video stream finished.")
         #     self.destroy_node()
         #     return
         if self.frame_index >= self.total_frames:
-            self.get_logger().info("📁 .mat file stream finished.")
+            self.get_logger().info(".mat file stream finished.")
             self.destroy_node()
             return
 
@@ -110,7 +107,7 @@ class RPPGVideoNode(Node):
                 print(f"Published BPM (CHROM): {bpm:.2f}")
                 print(f"Inference latency: {(perf_counter() - start)*1000:.2f} ms")
             except Exception as e:
-                self.get_logger().warn(f"⚠️ CHROM processing error: {e}")
+                self.get_logger().warn(f"CHROM processing error: {e}")
 
             self.buffer = self.buffer[self.extra_frames:]
 

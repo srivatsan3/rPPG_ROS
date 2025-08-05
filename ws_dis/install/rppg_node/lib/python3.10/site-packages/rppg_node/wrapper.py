@@ -3,12 +3,10 @@ import os
 import sys
 
 def main():
-    # Path to your virtualenv Python
-    # venv_python = "/home/mscrobotics2425laptop11/pyvhr_ros_env/bin/python"
+    # Path to virtualenv Python
     venv_python = "/home/mscrobotics2425laptop11/rppg_env/bin/python"
 
-    # Path to your actual ROS 2 node
-    # node_script = os.path.expanduser("~/ws_dis/src/rppg_node/rppg_node/rppg_node.py")
+    # Path to ROS 2 node
     node_script = os.path.expanduser("~/ws_dis/src/rppg_node/rppg_node/rppg_toolbox_nn_node.py")
 
     # Run the script using the virtualenv Python

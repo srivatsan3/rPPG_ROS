@@ -8,8 +8,16 @@ import mediapipe as mp
 import numpy as np
 import time
 import sys
-sys.path.insert(0, '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox') 
+import warnings
+warnings.filterwarnings("ignore")
+import os
+import contextlib
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+rppg_tb_path = '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'
+sys.path.insert(0, rppg_tb_path) # Path to rPPG toolbox
+
+# Importing different non Neural Network methods from the rPPG Toolbox
 from unsupervised_methods.methods.CHROME_DEHAAN import CHROME_DEHAAN
 from unsupervised_methods.methods.GREEN import GREEN
 from unsupervised_methods.methods.LGI import LGI
@@ -19,12 +27,30 @@ from unsupervised_methods.methods.OMIT import OMIT
 from unsupervised_methods.methods.PBV import PBV
 from unsupervised_methods.methods.PBV import PBV2
 
+# Importing Post processing tools from rPPG Toolbox
 from evaluation.post_process import _calculate_peak_hr, _calculate_fft_hr
 
-mp_face_detection = mp.solutions.face_detection
+FOREHEAD_LANDMARKS = [54,103,67,109,10, 338, 297, 332, 284, 333,299,337,151,108,69,104,68]
+LEFT_CHEEK_LANDMARKS = [280,346,347,330,266,425,411]
+RIGHT_CHEEK_LANDMARKS = [50,123,187,205,36,101,118,117]
+
+mp_face_detection = mp.solutions.face_detection #Mediapipe face detection
 mp_drawing = mp.solutions.drawing_utils
+mp_face_mesh = mp.solutions.face_mesh
 
 def extract_face_roi(frame, box_size=128, face_detection = None):
+    '''
+    Function to extract the region of interest (Face)
+
+    Parameters:
+    frame : An array representing a single frame of the video
+    box_size: The size of region of interest required
+    face_detection : Face Dectection method
+
+    Returns:
+    face_crop : Cropped image with detected face in it
+    detection : Key points detection and boundix box information
+    '''
     if face_detection is None:
         return None
     results = face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -47,6 +73,41 @@ def extract_face_roi(frame, box_size=128, face_detection = None):
 
     return face_crop, detection
 
+def extract_face_regions(frame, roi_size=128):
+    with contextlib.redirect_stderr(None):
+        with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1,
+                                    refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:
+            results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            if not results.multi_face_landmarks:
+                return None
+
+        h, w, _ = frame.shape
+        landmarks = results.multi_face_landmarks[0].landmark
+
+        from mediapipe.framework.formats import landmark_pb2
+
+        full_landmarks = results.multi_face_landmarks[0].landmark
+        forehead_landmarks = landmark_pb2.NormalizedLandmarkList(
+            landmark=[full_landmarks[i] for i in FOREHEAD_LANDMARKS]
+        )
+
+        def extract_roi(landmark_indices):
+            points = [landmarks[i] for i in landmark_indices]
+            xs = [int(p.x * w) for p in points]
+            ys = [int(p.y * h) for p in points]
+            x1, x2 = min(xs), max(xs)
+            y1, y2 = min(ys), max(ys)
+            roi = frame[y1:y2, x1:x2]
+            if roi.size == 0:
+                return None
+            return cv2.resize(roi, (roi_size, roi_size))
+
+        # return {
+        #     "forehead": extract_roi(FOREHEAD_LANDMARKS),
+        #     "left_cheek": extract_roi(LEFT_CHEEK_LANDMARKS),
+        #     "right_cheek": extract_roi(RIGHT_CHEEK_LANDMARKS)
+        # }
+        return extract_roi(FOREHEAD_LANDMARKS), forehead_landmarks
 
 class RPPGToolboxNode(Node):
     def __init__(self):
@@ -78,11 +139,16 @@ class RPPGToolboxNode(Node):
         if not ret:
             self.get_logger().warn("Failed to read frame from webcam")
             return
-        frame_cropped, detection = extract_face_roi(frame, face_detection=self.face_detector)
+        # frame_cropped, detection = extract_face_roi(frame, face_detection=self.face_detector)
+        
+        frame_cropped, face_landmarks = extract_face_regions(frame)
 
         if frame_cropped is not None:
             self.buffer.append(frame_cropped)
-            mp_drawing.draw_detection(frame, detection)
+            cv2.imshow('face',frame_cropped)
+            mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+            connections=None,
+            landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
         else:
             self.get_logger().warn("No face detected — skipping frame")
 
@@ -96,7 +162,6 @@ class RPPGToolboxNode(Node):
             start = perf_counter()
 
             try:
-                # Run CHROM method (CPU-only)
                 bvp = CHROME_DEHAAN(self.buffer, FS=self.fps)
                 # bvp = POS_WANG(self.buffer, fs=self.fps)
                 # bvp = ICA_POH(self.buffer, FS = self.fps)
@@ -116,7 +181,7 @@ class RPPGToolboxNode(Node):
 
                 # Publish BPM
                 self.publisher_.publish(Float32(data=bpm))
-                print(f"Published BPM: {bpm:.2f}")
+                print(f"*****************************************************8Published BPM: {bpm:.2f}")
             except Exception as e:
                 self.get_logger().warn(f"CHROM processing error: {e}")
             end = perf_counter()
