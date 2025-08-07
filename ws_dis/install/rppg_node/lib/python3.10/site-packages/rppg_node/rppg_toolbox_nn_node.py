@@ -9,6 +9,7 @@ import torch
 import sys
 import os
 import psutil
+import contextlib
 rppg_tb_path = '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'
 
 sys.path.insert(0, rppg_tb_path) # Path to rPPG toolbox
@@ -21,10 +22,9 @@ from neural_methods.model.BigSmall import BigSmall
 
 from evaluation.post_process import _calculate_peak_hr, _calculate_fft_hr
     # Landmark indices for approximate ROIs
-FOREHEAD_LANDMARKS = [10, 338, 297, 332, 284, 251]
-LEFT_CHEEK_LANDMARKS = [234, 93, 132]
-RIGHT_CHEEK_LANDMARKS = [454, 323, 361]
-    
+FOREHEAD_LANDMARKS = [54,103,67,109,10, 338, 297, 332, 284, 333,299,337,151,108,69,104,68]
+LEFT_CHEEK_LANDMARKS = [280,346,347,330,266,425,411]
+RIGHT_CHEEK_LANDMARKS = [50,123,187,205,36,101,118,117]
 
 class RPPGNeuralNode(Node):
     def __init__(self):
@@ -111,14 +111,22 @@ class RPPGNeuralNode(Node):
 
 
     def extract_face_regions(self,frame, roi_size=128):
-        with self.mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1,
-                                    refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:
-            results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-            if not results.multi_face_landmarks:
-                return None
+        with contextlib.redirect_stderr(None):
+            with self.mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1,
+                                        refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:
+                results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                if not results.multi_face_landmarks:
+                    return None
 
             h, w, _ = frame.shape
             landmarks = results.multi_face_landmarks[0].landmark
+
+            from mediapipe.framework.formats import landmark_pb2
+
+            full_landmarks = results.multi_face_landmarks[0].landmark
+            forehead_landmarks = landmark_pb2.NormalizedLandmarkList(
+                landmark=[full_landmarks[i] for i in FOREHEAD_LANDMARKS]
+            )
 
             def extract_roi(landmark_indices):
                 points = [landmarks[i] for i in landmark_indices]
@@ -136,7 +144,7 @@ class RPPGNeuralNode(Node):
             #     "left_cheek": extract_roi(LEFT_CHEEK_LANDMARKS),
             #     "right_cheek": extract_roi(RIGHT_CHEEK_LANDMARKS)
             # }
-            return extract_roi(FOREHEAD_LANDMARKS), landmarks
+            return extract_roi(FOREHEAD_LANDMARKS), forehead_landmarks
 
 
     def prepare_input_for_bigsmall(self, big_res=144, small_res=9):
@@ -203,11 +211,17 @@ class RPPGNeuralNode(Node):
             self.get_logger().warn("Webcam read failed")
             return
 
-        face_crop, detection = self.extract_face_crop(frame)
-        # face_crop, detection = self.extract_face_regions(frame)
-        if face_crop is not None:
-            self.buffer.append(face_crop)
-            self.mp_drawing.draw_detection(frame, detection)
+        # face_crop, detection = self.extract_face_crop(frame)
+        frame_cropped, face_landmarks = self.extract_face_regions(frame)
+
+        if frame_cropped is not None:
+            self.buffer.append(frame_cropped)
+            cv2.imshow('face',frame_cropped)
+            self.mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+            connections=None,
+            landmark_drawing_spec=self.mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
+        else:
+            self.get_logger().warn("No face detected — skipping frame")
 
         # Optional: visualize for debugging
         cv2.imshow('Face Detection', frame)
@@ -251,7 +265,7 @@ class RPPGNeuralNode(Node):
                 # self.get_logger().warn(f"Inference error: {e}")
 
             # Keep overlap
-            self.buffer = self.buffer[int(self.window_size * 0.5):]
+            self.buffer = self.buffer[int(self.window_size * 0.25):]
             # end = perf_counter()
             # print(f"Inference latency: {(end - start)*1000:.2f} ms")
 

@@ -90,7 +90,7 @@ def extract_face_regions(frame, roi_size=128):
         forehead_landmarks = landmark_pb2.NormalizedLandmarkList(
             landmark=[full_landmarks[i] for i in FOREHEAD_LANDMARKS]
         )
-
+        print(forehead_landmarks)
         def extract_roi(landmark_indices):
             points = [landmarks[i] for i in landmark_indices]
             xs = [int(p.x * w) for p in points]

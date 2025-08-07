@@ -73,7 +73,7 @@ def extract_face_roi(frame, box_size=128, face_detection = None):
 
     return face_crop, detection
 
-def extract_face_regions(frame, roi_size=128):
+def extract_face_regions(frame, landmarks = ['forehead'], roi_size=128):
     with contextlib.redirect_stderr(None):
         with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1,
                                     refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:
@@ -86,8 +86,9 @@ def extract_face_regions(frame, roi_size=128):
 
         from mediapipe.framework.formats import landmark_pb2
 
+
         full_landmarks = results.multi_face_landmarks[0].landmark
-        forehead_landmarks = landmark_pb2.NormalizedLandmarkList(
+        landmarks = landmark_pb2.NormalizedLandmarkList(
             landmark=[full_landmarks[i] for i in FOREHEAD_LANDMARKS]
         )
 
