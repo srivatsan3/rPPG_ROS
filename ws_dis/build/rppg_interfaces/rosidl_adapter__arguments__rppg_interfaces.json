@@ -1,0 +1,6 @@
+{
+  "package_name": "rppg_interfaces",
+  "non_idl_tuples": [
+    "/home/mscrobotics2425laptop11/rPPG_ROS/ws_dis/src/rppg_interfaces:msg/FrameBatch.msg"
+  ]
+}

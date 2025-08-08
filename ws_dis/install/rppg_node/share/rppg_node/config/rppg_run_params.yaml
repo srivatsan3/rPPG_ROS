@@ -1,0 +1,11 @@
+rppg_toolbox_node:
+  ros__parameters:
+    frame_rate: 30
+    algo: 'pos'
+    estimate: 'fft'
+    window_secs: 3
+    overlap_secs: 2
+    camera_topic: '/camera'
+    topic: '/heart_rate_bpm'
+    video_path: '/home/mscrobotics2425laptop11/Dissertation/UBFC/RawData/subject1/vid.avi'
+    dict_key: 'RawFrames'

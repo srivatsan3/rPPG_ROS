@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
 from scipy.signal import find_peaks
+from mediapipe.framework.formats import landmark_pb2
 from time import perf_counter
 import cv2
 import mediapipe as mp
@@ -69,7 +70,7 @@ def extract_face_roi(frame, box_size=128, face_detection = None):
     y2 = int((bbox.ymin + bbox.height) * h)
 
     face_crop = frame[y1:y2, x1:x2]
-    face_crop = cv2.resize(face_crop, (box_size, box_size))
+    face_crop = cv2.resize(face_crop, (box_size*2//3, box_size))
 
     return face_crop, detection
 
@@ -84,13 +85,13 @@ def extract_face_regions(frame, roi_size=128):
         h, w, _ = frame.shape
         landmarks = results.multi_face_landmarks[0].landmark
 
-        from mediapipe.framework.formats import landmark_pb2
+
 
         full_landmarks = results.multi_face_landmarks[0].landmark
         forehead_landmarks = landmark_pb2.NormalizedLandmarkList(
             landmark=[full_landmarks[i] for i in FOREHEAD_LANDMARKS]
         )
-        print(forehead_landmarks)
+        # print(forehead_landmarks)
         def extract_roi(landmark_indices):
             points = [landmarks[i] for i in landmark_indices]
             xs = [int(p.x * w) for p in points]
@@ -139,16 +140,16 @@ class RPPGToolboxNode(Node):
         if not ret:
             self.get_logger().warn("Failed to read frame from webcam")
             return
-        # frame_cropped, detection = extract_face_roi(frame, face_detection=self.face_detector)
+        frame_cropped, detection = extract_face_roi(frame, face_detection=self.face_detector)
         
-        frame_cropped, face_landmarks = extract_face_regions(frame)
+        # frame_cropped, face_landmarks = extract_face_regions(frame)
 
         if frame_cropped is not None:
             self.buffer.append(frame_cropped)
             cv2.imshow('face',frame_cropped)
-            mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
-            connections=None,
-            landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
+            # mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+            # connections=None,
+            # landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
         else:
             self.get_logger().warn("No face detected — skipping frame")
 
@@ -160,10 +161,10 @@ class RPPGToolboxNode(Node):
 
         if len(self.buffer) >= self.window_size:
             start = perf_counter()
-
+            print(len(self.buffer), self.buffer[0].shape)
             try:
-                bvp = CHROME_DEHAAN(self.buffer, FS=self.fps)
-                # bvp = POS_WANG(self.buffer, fs=self.fps)
+                # bvp = CHROME_DEHAAN(self.buffer, FS=self.fps)
+                bvp = POS_WANG(self.buffer, fs=self.fps)
                 # bvp = ICA_POH(self.buffer, FS = self.fps)
 
                 # bvp = GREEN(self.buffer)
