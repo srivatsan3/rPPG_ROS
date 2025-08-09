@@ -1,0 +1,8 @@
+webcam_buffer_publisher_node:
+  ros__parameters:
+    webcam_id: 0              # Webcam ID (Usually 0 for integrated webcam)
+    frame_rate: 30            # Camera FPS (Pass the same into rppg params yaml)
+    topic: '/camera'          # Camera Topic to Publish frames
+    img_height: 96            # Image height (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
+    img_width: 128            # Image width (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
+    roi_area: 'forehead'      # Region of Interest Area ('forehead', 'left_cheek', 'right_cheek' supported, No multiple values supported)

@@ -1,0 +1,70 @@
+[0.638s] Invoking command in '/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/src/rppg_node': CONDA_PROMPT_MODIFIER=(base) PS1=(rppg_env) (base) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(rppg_env) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rppg_node build --build-base /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build install --record /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/install.log --single-version-externally-managed install_data
+[0.881s] running egg_info
+[0.882s] creating ../../build/rppg_node/rppg_node.egg-info
+[0.888s] writing ../../build/rppg_node/rppg_node.egg-info/PKG-INFO
+[0.888s] writing dependency_links to ../../build/rppg_node/rppg_node.egg-info/dependency_links.txt
+[0.888s] writing entry points to ../../build/rppg_node/rppg_node.egg-info/entry_points.txt
+[0.889s] writing requirements to ../../build/rppg_node/rppg_node.egg-info/requires.txt
+[0.889s] writing top-level names to ../../build/rppg_node/rppg_node.egg-info/top_level.txt
+[0.890s] writing manifest file '../../build/rppg_node/rppg_node.egg-info/SOURCES.txt'
+[0.894s] reading manifest file '../../build/rppg_node/rppg_node.egg-info/SOURCES.txt'
+[0.896s] writing manifest file '../../build/rppg_node/rppg_node.egg-info/SOURCES.txt'
+[0.896s] running build
+[0.897s] running build_py
+[0.897s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build
+[0.897s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib
+[0.897s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.897s] copying ./rppg_node/webcam_reader.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.898s] copying ./rppg_node/rppg_toolbox_node_run.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.898s] copying ./rppg_node/__init__.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.899s] copying ./rppg_node/rppg_node.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.899s] copying ./rppg_node/rppg_toolbox_video_node.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node
+[0.899s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils
+[0.900s] copying ./utils/rppg_utils.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils
+[0.900s] copying ./utils/__init__.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils
+[0.900s] copying ./utils/face_roi_detection.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils
+[0.901s] copying ./utils/utils.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils
+[0.902s] running install
+[0.903s] running install_lib
+[0.905s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.905s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node/webcam_reader.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.906s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node/rppg_toolbox_node_run.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.907s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node/__init__.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.907s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node/rppg_node.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.908s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/rppg_node/rppg_toolbox_video_node.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node
+[0.908s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils
+[0.908s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils/rppg_utils.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils
+[0.909s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils/__init__.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils
+[0.912s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils/face_roi_detection.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils
+[0.912s] copying /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build/lib/utils/utils.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils
+[0.913s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/webcam_reader.py to webcam_reader.cpython-310.pyc
+[0.916s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_toolbox_node_run.py to rppg_toolbox_node_run.cpython-310.pyc
+[0.918s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__init__.py to __init__.cpython-310.pyc
+[0.919s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_node.py to rppg_node.cpython-310.pyc
+[0.921s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_toolbox_video_node.py to rppg_toolbox_video_node.cpython-310.pyc
+[0.923s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils/rppg_utils.py to rppg_utils.cpython-310.pyc
+[0.925s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils/__init__.py to __init__.cpython-310.pyc
+[0.925s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils/face_roi_detection.py to face_roi_detection.cpython-310.pyc
+[0.926s] byte-compiling /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils/utils.py to utils.cpython-310.pyc
+[0.927s] running install_data
+[0.927s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/ament_index
+[0.927s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/ament_index/resource_index
+[0.928s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/ament_index/resource_index/packages
+[0.928s] copying resource/rppg_node -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/ament_index/resource_index/packages
+[0.928s] copying package.xml -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node
+[0.929s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/launch
+[0.929s] copying launch/rppg_pipeline.launch.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/launch
+[0.930s] copying launch/rppg_pipeline_video.launch.py -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/launch
+[0.930s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/config
+[0.930s] copying config/rppg_run_params.yaml -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/config
+[0.930s] copying config/webcam_params.yaml -> /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/config
+[0.930s] creating /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/share/rppg_node/msg
+[0.931s] running install_egg_info
+[0.931s] Copying ../../build/rppg_node/rppg_node.egg-info to /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node-0.0.0-py3.10.egg-info
+[0.932s] running install_scripts
+[0.953s] Installing rppg_toolbox_node_run script to /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/rppg_node
+[0.954s] Installing rppg_toolbox_node_run_nn script to /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/rppg_node
+[0.954s] Installing rppg_toolbox_video_node script to /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/rppg_node
+[0.954s] Installing webcam_reader script to /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/rppg_node
+[0.955s] writing list of installed files to '/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/install.log'
+[0.978s] Invoked command in '/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/src/rppg_node' returned '0': CONDA_PROMPT_MODIFIER=(base) PS1=(rppg_env) (base) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(rppg_env) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rppg_node build --build-base /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/build install --record /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/build/rppg_node/install.log --single-version-externally-managed install_data
