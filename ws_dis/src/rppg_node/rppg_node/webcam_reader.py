@@ -21,10 +21,16 @@ class WebcamBufferPublisherNode(Node):
         self.declare_parameter('webcam_id',0)
         self.declare_parameter('frame_rate',30)
         self.declare_parameter('topic','/camera')
+        self.declare_parameter('img_width', 128)
+        self.declare_parameter('img_height', 96)
+        self.declare_parameter('roi_area','left_cheek')
 
         self.webcam_id = self.get_parameter('webcam_id').get_parameter_value().integer_value
         self.frame_rate = self.get_parameter('frame_rate').get_parameter_value().integer_value
         self.publish_topic = self.get_parameter('topic').get_parameter_value().string_value
+        self.img_width = self.get_parameter('img_width').get_parameter_value().integer_value
+        self.img_height = self.get_parameter('img_height').get_parameter_value().integer_value
+        self.roi_area = self.get_parameter('roi_area').get_parameter_value().string_value
         
         # self.webcam_id = 0
         # self.frame_rate = 30
@@ -42,6 +48,7 @@ class WebcamBufferPublisherNode(Node):
         self.publisher = self.create_publisher(Image, self.publish_topic, 10)
         self.bridge = CvBridge()
         self.frame_buffer = []
+        self.roi_area = self.roi_area.replace('_',' ').upper()
 
         timer_period = 1/self.frame_rate
         self.timer = self.create_timer(timer_period, self.capture_frame)
@@ -52,7 +59,7 @@ class WebcamBufferPublisherNode(Node):
             self.get_logger().warning('Frame capture failed')
             return
         # print(frame)
-        frame_cropped, face_landmarks = extract_face_regions(frame, roi = 'LEFT CHEEK',target_size=(96,128))
+        frame_cropped, face_landmarks = extract_face_regions(frame, roi = self.roi_area, target_size=(self.img_width,self.img_height))
         # print(frame_cropped)
 
         if frame_cropped is not None:

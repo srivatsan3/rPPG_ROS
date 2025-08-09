@@ -16,6 +16,7 @@ from utils.face_roi_detection import *
 from utils.utils import read_video
 
 mp_drawing = mp.solutions.drawing_utils
+NN_ALGOS = ['physnet','efficientphys','deepphys','bigsmall']
 
 class RPPGVideoNode(Node):
     def __init__(self):
@@ -24,13 +25,16 @@ class RPPGVideoNode(Node):
         self.declare_parameter('frame_rate',30)
         self.declare_parameter('window_secs', 5)
         self.declare_parameter('overlap_secs', 4)
-        # self.declare_parameter('video_path', '/home/mscrobotics2425laptop11/Dissertation/scamps_sample/P000001.mat')
         self.declare_parameter('video_path', '')
         self.declare_parameter('dict_key', '')
+        self.declare_parameter('img_width', 128)
+        self.declare_parameter('img_height', 96)
+        self.declare_parameter('roi_area','left_cheek')
 
         self.declare_parameter('topic','/heart_rate_bpm')
         self.declare_parameter('algo','pos')
         self.declare_parameter('estimate','fft')
+
 
  
         self.fps = self.get_parameter('frame_rate').get_parameter_value().integer_value
@@ -38,6 +42,9 @@ class RPPGVideoNode(Node):
         self.overlap_s = self.get_parameter('overlap_secs').get_parameter_value().integer_value
         self.video_path = self.get_parameter('video_path').get_parameter_value().string_value
         self.dict_key = self.get_parameter('dict_key').get_parameter_value().string_value
+        self.img_width = self.get_parameter('img_width').get_parameter_value().integer_value
+        self.img_height = self.get_parameter('img_height').get_parameter_value().integer_value
+        self.roi_area = self.get_parameter('roi_area').get_parameter_value().string_value
         
 
         self.algo = self.get_parameter('algo').get_parameter_value().string_value
@@ -46,18 +53,26 @@ class RPPGVideoNode(Node):
 
         self.frame_buffer = []
         self.frame_index = 0
+        
 
         self.video_frames = read_video(self.video_path, self.dict_key)
-
         self.total_frames  = self.video_frames.shape[0]
-        # print(self.total_frames, self.video_frames.shape)
         self.window_length = int(self.fps*self.window_size_s)
         self.overlap_length = int(self.fps*self.overlap_s)
+        self.roi_area = self.roi_area.replace('_',' ').upper()
         
+        if self.algo in NN_ALGOS:
+            self.model, checkpoint_path = load_model(algo = self.algo, frames = self.window_length)
+            
+            state_dict = torch.load(checkpoint_path, map_location='cpu')
+            cleaned_state = {k.replace('module.', ''): v for k, v in state_dict.items()}
+            self.model.load_state_dict(cleaned_state)
+            self.model.eval()
 
         self.publisher_ = self.create_publisher(Float32, self.publish_topic, 10)
         self.timer = self.create_timer(1.0 / self.fps, self.timer_callback)
 
+        
     def timer_callback(self):
         if self.frame_index >= self.total_frames:
             self.get_logger().info("Video file stream finished.")
@@ -65,20 +80,19 @@ class RPPGVideoNode(Node):
             return
 
         frame = self.video_frames[self.frame_index]
-        # frame = (frame * 255).clip(0, 255).astype(np.uint8)
 
         self.frame_index += 1
 
-        frame_cropped, face_landmarks = extract_face_regions(frame, roi = 'LEFT CHEEK',target_size=(96,128))
+        frame_cropped, face_landmarks = extract_face_regions(frame, roi = self.roi_area,target_size=(self.img_width, self.img_height))
 
         if frame_cropped is not None:
             self.frame_buffer.append(frame_cropped)
             cv2.imshow('face',frame_cropped)
-            # mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
-            # connections=None,
-            # landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
+            mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+            connections=None,
+            landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
         else:
-            self.get_logger().warn("No face detected — skipping frame")
+            self.get_logger().warn("No face detected : skipping frame")
 
         cv2.imshow('Face ROI Viewer', frame)
         cv2.waitKey(1)
@@ -88,8 +102,11 @@ class RPPGVideoNode(Node):
             try:
                 start = perf_counter()
 
-                bpm = run_rppg(buffer = self.frame_buffer, fps = self.fps ,algo = self.algo, bpm_estimate=self.bpm_estimate)
-
+                if self.algo not in NN_ALGOS:
+                    bpm = run_rppg(buffer = self.frame_buffer, fps = self.fps ,algo = self.algo, bpm_estimate=self.bpm_estimate)
+                else:
+                    bpm = run_rppg_nn(buffer = self.frame_buffer, fps = self.fps, algo = self.algo, bpm_estimate = self.bpm_estimate, model = self.model)
+            
                 self.publisher_.publish(Float32(data=bpm))
                 print(f"Published BPM ({self.algo}): {bpm:.2f}")
                 print(f"Inference latency: {(perf_counter() - start)*1000:.2f} ms")

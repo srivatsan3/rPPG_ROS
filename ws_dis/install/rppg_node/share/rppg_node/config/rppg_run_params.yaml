@@ -7,5 +7,8 @@ rppg_toolbox_node:
     overlap_secs: 2
     camera_topic: '/camera'
     topic: '/heart_rate_bpm'
+    rppgtb_path: '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'
     video_path: '/home/mscrobotics2425laptop11/Dissertation/UBFC/RawData/subject1/vid.avi'
-    dict_key: 'RawFrames'
+    img_height: 96
+    img_width: 128
+    roi_area: 'forehead'

@@ -10,9 +10,9 @@ setup.py
 ../../build/rppg_node/rppg_node.egg-info/zip-safe
 ./rppg_node/__init__.py
 ./rppg_node/rppg_node.py
-./rppg_node/rppg_toolbox_nn_node.py
 ./rppg_node/rppg_toolbox_node.py
 ./rppg_node/rppg_toolbox_node_run.py
+./rppg_node/rppg_toolbox_node_run_nn.py
 ./rppg_node/rppg_toolbox_video_node.py
 ./rppg_node/webcam_reader.py
 ./rppg_node/wrapper.py

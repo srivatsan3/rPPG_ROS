@@ -20,7 +20,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 utils_path = '/home/mscrobotics2425laptop11/rPPG_ROS/ws_dis/src/rppg_node'
 sys.path.insert(0, utils_path) # Path to rPPG toolbox
 from utils.rppg_utils import *
-
+NN_ALGOS = ['physnet','efficientphys','deepphys','bigsmall']
 
 class RPPGToolboxNode(Node):
     def __init__(self):
@@ -30,12 +30,13 @@ class RPPGToolboxNode(Node):
         self.declare_parameter('camera_topic','/camera')
         self.declare_parameter('window_secs', 8)
         self.declare_parameter('overlap_secs', 2)
+        
 
         self.declare_parameter('topic','/heart_rate_bpm')
         self.declare_parameter('algo','pos')
         self.declare_parameter('estimate','fft')
  
-
+        
         self.fps = self.get_parameter('frame_rate').get_parameter_value().integer_value
         self.camera_topic = self.get_parameter('camera_topic').get_parameter_value().string_value
         self.window_size_s = self.get_parameter('window_secs').get_parameter_value().integer_value
@@ -57,10 +58,14 @@ class RPPGToolboxNode(Node):
 
         print('~~~~~~~~~~~~~~~~~~~~~ PARAMS ~~~~~~~~~~~~~~~~')
         print(self.fps,self.camera_topic,self.algo,self.bpm_estimate)
-        
 
-        # self.algo = 'pos'
-        # self.bpm_estimate = 'fft'
+        if self.algo in NN_ALGOS:
+            self.model, checkpoint_path = load_model(algo = self.algo, frames = self.window_length)
+            
+            state_dict = torch.load(checkpoint_path, map_location='cpu')
+            cleaned_state = {k.replace('module.', ''): v for k, v in state_dict.items()}
+            self.model.load_state_dict(cleaned_state)
+            self.model.eval()
 
     def frame_callback(self,msg):
         
@@ -71,9 +76,11 @@ class RPPGToolboxNode(Node):
         if len(self.frame_buffer) == self.window_length:
             print('*******************************',len(self.frame_buffer),self.frame_buffer[0].shape,'*********************************************')
             start = perf_counter()
-
-            bpm = run_rppg(buffer = self.frame_buffer, fps = self.fps ,algo = self.algo, bpm_estimate=self.bpm_estimate)
-
+            if self.algo not in NN_ALGOS:
+                bpm = run_rppg(buffer = self.frame_buffer, fps = self.fps ,algo = self.algo, bpm_estimate=self.bpm_estimate)
+            else:
+                bpm = run_rppg_nn(buffer = self.frame_buffer, fps = self.fps, algo = self.algo, bpm_estimate = self.bpm_estimate, model = self.model)
+            
             print('****************************BPM*********************************',bpm)
             self.publisher_.publish(Float32(data=float(bpm)))
                 

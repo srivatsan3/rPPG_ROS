@@ -3,3 +3,6 @@ webcam_buffer_publisher_node:
     webcam_id: 0
     frame_rate: 30
     topic: '/camera'
+    img_height: 96
+    img_width: 128
+    roi_area: 'forehead'
