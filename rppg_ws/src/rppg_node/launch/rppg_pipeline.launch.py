@@ -1,6 +1,5 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess
 import os
 
 def generate_launch_description():
@@ -11,6 +10,8 @@ def generate_launch_description():
     webcam_params = os.path.join(config_dir, 'webcam_params.yaml')
     rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
 
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
+
     launch_desc = LaunchDescription([
         Node(
             package = 'rppg_node',
@@ -18,7 +19,7 @@ def generate_launch_description():
             name = 'webcam_buffer_publisher_node',
             parameters = [webcam_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
+            prefix=python_path
         ),
         Node(
             package = 'rppg_node',
@@ -26,9 +27,8 @@ def generate_launch_description():
             name = 'rppg_toolbox_node',
             parameters = [rppg_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
+            prefix=python_path
         )
-
     ])
 
     return launch_desc

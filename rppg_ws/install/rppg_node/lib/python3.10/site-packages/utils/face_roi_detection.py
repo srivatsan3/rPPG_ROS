@@ -2,15 +2,17 @@ import cv2
 import mediapipe as mp
 import contextlib
 from mediapipe.framework.formats import landmark_pb2
+import gc
 
 FOREHEAD_LANDMARKS = [54,103,67,109,10, 338, 297, 332, 284, 333,299,337,151,108,69,104,68]
 LEFT_CHEEK_LANDMARKS = [280,346,347,330,266,425,411]
 RIGHT_CHEEK_LANDMARKS = [50,123,187,205,36,101,118,117]
 
 mp_face_mesh = mp.solutions.face_mesh
+mp_face_detection = mp.solutions.face_detection
 
 
-def extract_face_roi(frame, box_size=128, face_detection = None):
+def extract_face(frame, box_size=(128,128)):
     '''
     Function to extract the region of interest (Face)
 
@@ -23,12 +25,11 @@ def extract_face_roi(frame, box_size=128, face_detection = None):
     face_crop : Cropped image with detected face in it
     detection : Key points detection and boundix box information
     '''
-    if face_detection is None:
-        return None
-    results = face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence=0.5) as face_detection:
+        results = face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
     if not results.detections:
-        return None,None  # No face detected
+        return None, None
 
     # Use first detected face
     detection = results.detections[0]
@@ -41,7 +42,7 @@ def extract_face_roi(frame, box_size=128, face_detection = None):
     y2 = int((bbox.ymin + bbox.height) * h)
 
     face_crop = frame[y1:y2, x1:x2]
-    face_crop = cv2.resize(face_crop, (box_size, box_size))
+    face_crop = cv2.resize(face_crop, box_size)
 
     return face_crop, detection
 
@@ -63,7 +64,7 @@ def extract_face_regions(frame, roi = 'FOREHEAD', target_size=(128,128)):
             roi_lm = FOREHEAD_LANDMARKS
         elif roi == 'LEFT CHEEK':
             roi_lm = LEFT_CHEEK_LANDMARKS
-        elif roi == 'RIGHT_CHEEK':
+        elif roi == 'RIGHT CHEEK':
             roi_lm =  RIGHT_CHEEK_LANDMARKS
 
 
@@ -86,6 +87,9 @@ def extract_face_regions(frame, roi = 'FOREHEAD', target_size=(128,128)):
         if roi_crop.size == 0:
             return None, None
         final_img =  cv2.resize(roi_crop, target_size)
+
+        # del roi_crop, target_size, xs, ys, x1, x2, full_landmarks, results, h, w, _, landmarks, roi, roi_lm, points
+        # gc.collect()
 
         return final_img, roi_landmarks
     

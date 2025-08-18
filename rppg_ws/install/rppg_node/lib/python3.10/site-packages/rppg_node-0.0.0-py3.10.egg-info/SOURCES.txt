@@ -12,6 +12,7 @@ setup.py
 ./rppg_node/rppg_node.py
 ./rppg_node/rppg_toolbox_node_run.py
 ./rppg_node/rppg_toolbox_video_node.py
+./rppg_node/system_monitor.py
 ./rppg_node/webcam_reader.py
 ./utils/__init__.py
 ./utils/face_roi_detection.py

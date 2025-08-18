@@ -9,7 +9,17 @@ def generate_launch_description():
     config_dir = os.path.join(base_dir,'config')
 
     rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
 
+    rppg_toolbox_node = ExecuteProcess(
+        cmd=[
+            'bash', '-c',
+            f'{python_path} -m rppg_node.rppg_toolbox_video_node --ros-args -p config:={rppg_params} 2>/dev/null'
+        ],
+        output='screen'
+    )
+
+    return LaunchDescription([rppg_toolbox_node])
     launch_desc = LaunchDescription([
         Node(
             package = 'rppg_node',
@@ -17,7 +27,7 @@ def generate_launch_description():
             name = 'rppg_toolbox_node',
             parameters = [rppg_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
+            prefix=python_path
         )
 
     ])

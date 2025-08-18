@@ -30,7 +30,8 @@ setup(
             'webcam_reader = rppg_node.webcam_reader:main',
             'rppg_toolbox_node_run = rppg_node.rppg_toolbox_node_run:main' ,
             'rppg_toolbox_node_run_nn = rppg_node.rppg_toolbox_node_run_nn:main' ,
-            'rppg_toolbox_video_node = rppg_node.rppg_toolbox_video_node:main'
+            'rppg_toolbox_video_node = rppg_node.rppg_toolbox_video_node:main',
+            'system_monitor = rppg_node.system_monitor:main'
         ],
     },
 )

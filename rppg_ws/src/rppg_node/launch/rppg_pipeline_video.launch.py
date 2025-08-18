@@ -9,6 +9,7 @@ def generate_launch_description():
     config_dir = os.path.join(base_dir,'config')
 
     rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
 
     launch_desc = LaunchDescription([
         Node(
@@ -17,9 +18,8 @@ def generate_launch_description():
             name = 'rppg_toolbox_node',
             parameters = [rppg_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
+            prefix=python_path
         )
-
     ])
 
     return launch_desc

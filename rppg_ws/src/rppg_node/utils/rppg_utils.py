@@ -30,21 +30,14 @@ from neural_methods.model.DeepPhys import DeepPhys
 from neural_methods.model.BigSmall import BigSmall
 
 from evaluation.post_process import _calculate_peak_hr, _calculate_fft_hr
-from scipy.signal import find_peaks
 
-
-def estimate_bpm_from_bvp(bvp, fps):
-    peaks, _ = find_peaks(bvp, distance=fps * 0.5)  
-    duration_sec = len(bvp) / fps
-    bpm = (len(peaks) / duration_sec) * 60
-    return bpm
 
 def run_rppg(buffer, fps, algo = 'POS', bpm_estimate = 'fft'):
     rppg_algorithms = {
             'chrom': lambda frames: CHROME_DEHAAN(frames, FS = fps),
             'pos': lambda frames: POS_WANG(frames, fs = fps),
             'green': lambda frames: GREEN(frames),
-            'ica': lambda frames: ICA_POH(frames),
+            'ica': lambda frames: ICA_POH(frames, FS = fps),
             'pbv': lambda frames: PBV(frames),
             'pbv2': lambda frames: PBV2(frames),
             'lgi' : lambda frames: LGI(frames),
@@ -57,8 +50,6 @@ def run_rppg(buffer, fps, algo = 'POS', bpm_estimate = 'fft'):
         bpm = _calculate_fft_hr(bvp, fs = fps)
     elif bpm_estimate == 'peak':
         bpm = _calculate_peak_hr(bvp, fs = fps)
-
-    # bpm = estimate_bpm_from_bvp(bvp, fps=fps)
 
     return bpm
 
@@ -80,7 +71,7 @@ def run_rppg_nn(buffer, fps, model,algo = 'physnet', bpm_estimate = 'fft'):
 
 
 def load_model(algo,frames = 300):
-    img_size = 36 # Default value for EfficientPhys and DeepPhys
+    img_size = 72 # Default value for EfficientPhys and DeepPhys
     if algo == 'efficientphys':
         model = EfficientPhys(frame_depth=frames, img_size=img_size).to(device)
         checkpoint_path = rppg_tb_path+'/final_model_release/UBFC-rPPG_EfficientPhys.pth'
@@ -92,7 +83,7 @@ def load_model(algo,frames = 300):
         checkpoint_path = rppg_tb_path+'/final_model_release/BP4D_BigSmall_Multitask_Fold1.pth'
     if algo == 'deepphys':
         model = DeepPhys(img_size = img_size).to(device)
-        checkpoint_path = rppg_tb_path+'final_model_release/UBFC-rPPG_DeepPhys.pth'
+        checkpoint_path = rppg_tb_path+'/final_model_release/UBFC-rPPG_DeepPhys.pth'
 
     return model, checkpoint_path
 
@@ -141,7 +132,7 @@ def prepare_input_for_deepphys(buffer):
     resized_frames = []
     for t in range(T):
         frame = np.array(buffer)[t]
-        resized = cv2.resize(frame, (36,36))
+        resized = cv2.resize(frame, (72,72))
         resized_frames.append(resized)
     resized_frames = np.array(resized_frames)
 
@@ -161,7 +152,7 @@ def prepare_input_for_efficientphys(buffer):
     resized_frames = []
     for t in range(T):
         frame = frames_np[t]
-        resized = cv2.resize(frame, (36,36))
+        resized = cv2.resize(frame, (72,72))
         resized_frames.append(resized)
     resized_frames = np.array(resized_frames)
 
