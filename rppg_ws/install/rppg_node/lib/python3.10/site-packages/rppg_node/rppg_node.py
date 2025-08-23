@@ -23,12 +23,10 @@ class RPPGNode(Node):
         print(f"Camera FPS: {fps}")
 
         self.buffer = []
-        # self.pipe = Pipeline(method='cpu_CHROM', roi_approach='patches', wsize=6)
         self.pipe  = Pipeline()
         self.timer = self.create_timer(1/30, self.timer_callback)
     
     def process_buffer_with_pyVHR(self):
-        # Create a temporary video file
         temp_video = tempfile.NamedTemporaryFile(suffix='.avi', delete=False)
         temp_path = temp_video.name
         print(temp_path)
@@ -53,9 +51,6 @@ class RPPGNode(Node):
                 verb = False
             )
 
-        # Clean up
-        # os.remove(temp_path)
-
         return bpm_array
         
 
@@ -68,34 +63,17 @@ class RPPGNode(Node):
         if len(self.buffer) % 30 == 0:
             print(len(self.buffer))
         if len(self.buffer) >= 10*30:
-            # print(self.buffer)
-            # bpm = self.pipe.run(self.buffer)
-            # t, bpm_array,bpm_mad, bvps = self.pipe.run_on_video(self.buffer,
-            #     # '/home/mscrobotics2425laptop11/Dissertation/UBFC/subject1/vid.avi',
-            #     method='cpu_'+'CHROM',
-            #     roi_method='convexhull',
-            #     roi_approach='hol',
-            #     pre_filt=True,
-            #     post_filt=True
-            # )
+
             bpm_array = self.process_buffer_with_pyVHR()
-            print(bpm_array)
-            # print(bpm)
-            # print(type(bpm))
+
             for bpm in bpm_array:
                 self.publisher_.publish(Float32(data=bpm))
                 self.get_logger().info(f"Published BPM: {bpm:.2f}")
                 time.sleep(1.0 / 30)
-            # result = self.pipe.run_on_video('/home/mscrobotics2425laptop11/Dissertation/UBFC/subject1/vid.avi', roi_approach="hol", roi_method="faceparsing", cuda=False, method = 'cpu_CHROM')
-            # print(result)
-            # print(type(result))
-            # bpm = result
-            # self.publisher_.publish(Float32(data=bpm))
-            # self.get_logger().info(f'Published BPM: {bpm:.2f}')
+
             self.buffer = []
 
 def main(args=None):
-    print('**************************main passed**************** \n\n')
     rclpy.init(args=args)
     node = RPPGNode()
     rclpy.spin(node)

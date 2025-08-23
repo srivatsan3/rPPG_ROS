@@ -73,7 +73,7 @@ def run_rppg_nn(buffer, fps, model,algo = 'physnet', bpm_estimate = 'fft'):
 def load_model(algo,frames = 300):
     img_size = 72 # Default value for EfficientPhys and DeepPhys
     if algo == 'efficientphys':
-        model = EfficientPhys(frame_depth=frames, img_size=img_size).to(device)
+        model = EfficientPhys(frame_depth = 30,img_size=img_size).to(device)
         checkpoint_path = rppg_tb_path+'/final_model_release/UBFC-rPPG_EfficientPhys.pth'
     if algo == 'physnet':
         model = PhysNet_padding_Encoder_Decoder_MAX(frames=frames).to(device)
@@ -147,6 +147,7 @@ def prepare_input_for_deepphys(buffer):
     return frames_tensor
 
 def prepare_input_for_efficientphys(buffer):
+    frame_depth = 30
     frames_np = np.array(buffer) / 255.0  # [T, H, W, C]
     T,H,W,C = frames_np.shape
     resized_frames = []
@@ -156,11 +157,16 @@ def prepare_input_for_efficientphys(buffer):
         resized_frames.append(resized)
     resized_frames = np.array(resized_frames)
 
-    frames_tensor = torch.tensor(resized_frames, dtype=torch.float32).permute(3, 0, 1, 2).unsqueeze(0).to(device)
-    B, C, T, H, W = frames_tensor.shape
-    inputs = frames_tensor.permute(0, 2, 1, 3, 4).reshape(B * T, C, H, W)  # [300, 3, 96, 96]
+    frames_tensor = torch.tensor(resized_frames, dtype=torch.float32).permute(0, 3, 1, 2)  # [T, C, H, W]
 
-    return inputs
+    # Apply diff
+    frames_tensor = torch.diff(frames_tensor, dim=0)  # [T-1, C, H, W]
+
+    # Truncate to multiple of frame_depth
+    T = frames_tensor.shape[0]
+    T_trunc = (T // frame_depth) * frame_depth + 1
+    frames_tensor = frames_tensor[:T_trunc]  # Final shape: [T_trunc, C, H, W]
+    return frames_tensor.to(device)
 
 def prepare_input_for_physnet(buffer):
     frames_np = np.array(buffer) / 255.0  # [T, H, W, C]

@@ -1,6 +1,5 @@
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/webcam_reader.py
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_toolbox_node_run.py
-/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/system_monitor.py
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__init__.py
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_node.py
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/rppg_toolbox_video_node.py
@@ -10,7 +9,6 @@
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/utils/utils.py
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/webcam_reader.cpython-310.pyc
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/rppg_toolbox_node_run.cpython-310.pyc
-/home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/system_monitor.cpython-310.pyc
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/__init__.cpython-310.pyc
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/rppg_node.cpython-310.pyc
 /home/mscrobotics2425laptop11/rPPG_ROS/rppg_ws/install/rppg_node/lib/python3.10/site-packages/rppg_node/__pycache__/rppg_toolbox_video_node.cpython-310.pyc

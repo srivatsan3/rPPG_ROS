@@ -1,25 +1,18 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
-from scipy.signal import find_peaks
 from time import perf_counter
 import cv2
 import mediapipe as mp
 import numpy as np
 import os
-import psutil
-import tracemalloc
-import gc
 from utils.rppg_utils import *
 from utils.face_roi_detection import *
 from utils.utils import read_video_stream
 from collections import deque
-import objgraph
 
 mp_drawing = mp.solutions.drawing_utils
 NN_ALGOS = ['physnet','efficientphys','deepphys','bigsmall']
-tracemalloc.start()
-
 
 class RPPGVideoNode(Node):
     def __init__(self):
@@ -52,11 +45,6 @@ class RPPGVideoNode(Node):
         self.bpm_estimate = self.get_parameter('estimate').get_parameter_value().string_value
         self.publish_topic = self.get_parameter('topic').get_parameter_value().string_value
 
-        
-        
-
-        # self.video_frames = read_video(self.video_path, self.dict_key)
-        # self.total_frames  = len(self.video_frames)
         self.window_length = int(self.fps*self.window_size_s)
         self.overlap_length = int(self.fps*self.overlap_s)
         self.roi_area = self.roi_area.replace('_',' ').upper()
@@ -74,25 +62,9 @@ class RPPGVideoNode(Node):
         self.publisher_ = self.create_publisher(Float32, self.publish_topic, 10)
         self.timer = self.create_timer(1.0 / self.fps, self.timer_callback)
 
-        
-        print('~~~~~~~~~~~~~~~~~~~~~ PARAMS ~~~~~~~~~~~~~~~~')
-        print(self.algo,self.bpm_estimate, self.window_size_s, self.overlap_s)
-
     def timer_callback(self):
-        # if self.frame_index >= self.total_frames:
-        #     self.get_logger().info("Video file stream finished.")
-        #     self.destroy_node()
-        #     return
 
-        start = perf_counter()
-        # frame = np.array(self.video_frames[self.frame_index])
-        
         for frame in read_video_stream(self.video_path, self.dict_key):
-            
-            # print(f"Frame Read: {(perf_counter() - start)*1000:.2f} ms")
-        # frame = np.array(read_video_stream(self.video_path, self.dict_key))
-        
-            start = perf_counter()
             self.frame_index += 1
             if self.roi_area != 'ALL':
                 frame_cropped, face_landmarks = extract_face_regions(frame, roi = self.roi_area,target_size=(self.img_width, self.img_height))
@@ -100,7 +72,7 @@ class RPPGVideoNode(Node):
                 frame_cropped, detection = extract_face(frame = frame, box_size= (self.img_width, self.img_height))
             if frame_cropped is not None:
                 self.frame_buffer.append(frame_cropped)
-                # cv2.imshow('face',frame_cropped)
+                cv2.imshow('Region of Interest',frame_cropped)
 
                 if self.roi_area != 'ALL':
                     mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
@@ -112,39 +84,13 @@ class RPPGVideoNode(Node):
                     del detection
             else:
                 self.get_logger().warn("No face detected : skipping frame")
-            # print(f"Frame ROI: {(perf_counter() - start)*1000:.2f} ms")
-            # start = perf_counter()
 
 
             cv2.imshow('Face ROI Viewer', frame)
             cv2.waitKey(1)
-            
-            
-            # print(f"Frame View: {(perf_counter() - start)*1000:.2f} ms")
-            # start = perf_counter()
-            # del frame, frame_cropped
-            # print('***************',len(self.frame_buffer))
-            # print(f"Frame Inference latency: {(perf_counter() - start)*1000:.2f} ms")
-            print(f"Frame Inference: {(perf_counter() - start)*1000:.2f} ms")
-            process = psutil.Process(os.getpid())
-            mem_info = process.memory_info()
-            print(f'{len(self.frame_buffer)} : Memory Consumption',mem_info.rss / (1024 ** 2))
-            # # current, peak = tracemalloc.get_traced_memory()
-            # # print(f"Tracemalloc - Current: {current / (1024 ** 2):.2f} MB; Peak: {peak / (1024 ** 2):.2f} MB")
-            # snapshot = tracemalloc.take_snapshot()
-            # top_stats = snapshot.statistics('lineno')
-
-            # print("[ Top 5 memory-consuming lines ]")
-            # for stat in top_stats[:5]:
-            #     print(stat)
-            start = perf_counter()
-            # objgraph.show_growth(limit=10)
 
             if len(self.frame_buffer) == self.window_length:
-                # gc.collect()
                 try:
-                    # start = perf_counter()
-
                     if self.algo not in NN_ALGOS:
                         bpm = run_rppg(buffer = self.frame_buffer, fps = self.fps ,algo = self.algo, bpm_estimate=self.bpm_estimate)
                     else:
@@ -152,27 +98,12 @@ class RPPGVideoNode(Node):
                 
                     self.publisher_.publish(Float32(data=bpm))
                     print(f"Published BPM ({self.algo}): {bpm:.2f}")
-                    print(f"Inference latency: {(perf_counter() - start)*1000:.2f} ms")
-
-                    process = psutil.Process(os.getpid())
-                    mem_info = process.memory_info()
-                    print(f' Memory Consumption',mem_info.rss / (1024 ** 2))
-
-                    del bpm
-                    # gc.collect()
                 except Exception as e:
                     self.get_logger().warn(f"Processing error: {e}")
 
                 for _ in range(self.window_length - self.overlap_length):
                     self.frame_buffer.popleft()
-
-
-
-
-                # gc.collect()
-
-                start = perf_counter()
-
+                    
 def main(args=None):
     rclpy.init(args=args)
     node = RPPGVideoNode()

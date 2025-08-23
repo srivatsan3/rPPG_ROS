@@ -1,51 +1,19 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess
 import os
 
 def generate_launch_description():
+    ''' Generates launch description for the rPPG pipeline with webcam reader and video node. '''
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     config_dir = os.path.join(base_dir,'config')
 
-    webcam_params = os.path.join(config_dir, 'webcam_params.yaml')
-    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
+    webcam_params = os.path.join(config_dir, 'webcam_params.yaml')  # Path to webcam parameters
+    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')  # Path to rPPG parameters
 
-    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
-    webcam_node = ExecuteProcess(
-        cmd=[
-            'bash', '-c',
-            f'{python_path} -m rppg_node.webcam_reader --ros-args -p config:={webcam_params} 2>/dev/null'
-        ],
-        output='screen'
-    )
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python' # Path to the Python interpreter in the rPPG environment
 
-    rppg_toolbox_node = ExecuteProcess(
-        cmd=[
-            'bash', '-c',
-            f'{python_path} -m rppg_node.rppg_toolbox_node_run --ros-args -p config:={rppg_params} 2>/dev/null'
-        ],
-        output='screen'
-    )
-
-    system_monitor_node = ExecuteProcess(
-        cmd=[
-            'bash', '-c',
-            f'{python_path} -m rppg_node.system_monitor'
-        ],
-        output='screen'
-    )
-    return LaunchDescription([
-        webcam_node,
-        rppg_toolbox_node,
-        # Node(
-        #     package='rppg_node',
-        #     executable='system_monitor',
-        #     name='system_monitor',
-        #     output='screen',
-        #     prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
-        # )
-    ])
+    # Launch description for the webcam reader and rPPG video node
     launch_desc = LaunchDescription([
         Node(
             package = 'rppg_node',
@@ -53,7 +21,7 @@ def generate_launch_description():
             name = 'webcam_buffer_publisher_node',
             parameters = [webcam_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
+            prefix=python_path
         ),
         Node(
             package = 'rppg_node',
@@ -61,17 +29,8 @@ def generate_launch_description():
             name = 'rppg_toolbox_node',
             parameters = [rppg_params],
             output = 'screen',
-            prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
-        ),
-        # Node(
-        #     package='rppg_node',
-        #     executable='system_monitor',
-        #     name='system_monitor',
-        #     output='screen',
-        #     prefix='/home/mscrobotics2425laptop11/rppg_env/bin/python'
-        # )
-
-
+            prefix=python_path
+        )
     ])
 
     return launch_desc

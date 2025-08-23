@@ -4,22 +4,15 @@ from launch.actions import ExecuteProcess
 import os
 
 def generate_launch_description():
+    ''' Generates launch description for the rPPG video node. '''
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     config_dir = os.path.join(base_dir,'config')
 
-    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
-    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
+    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')      # Path to rPPG parameters
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'   # Path to the Python interpreter in the rPPG environment
 
-    rppg_toolbox_node = ExecuteProcess(
-        cmd=[
-            'bash', '-c',
-            f'{python_path} -m rppg_node.rppg_toolbox_video_node --ros-args -p config:={rppg_params} 2>/dev/null'
-        ],
-        output='screen'
-    )
-
-    return LaunchDescription([rppg_toolbox_node])
+    # Launch description for the rPPG video node
     launch_desc = LaunchDescription([
         Node(
             package = 'rppg_node',
@@ -29,7 +22,6 @@ def generate_launch_description():
             output = 'screen',
             prefix=python_path
         )
-
     ])
 
     return launch_desc

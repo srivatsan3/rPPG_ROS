@@ -2,11 +2,10 @@ import cv2
 import mediapipe as mp
 import contextlib
 from mediapipe.framework.formats import landmark_pb2
-import gc
 
-FOREHEAD_LANDMARKS = [54,103,67,109,10, 338, 297, 332, 284, 333,299,337,151,108,69,104,68]
-LEFT_CHEEK_LANDMARKS = [280,346,347,330,266,425,411]
-RIGHT_CHEEK_LANDMARKS = [50,123,187,205,36,101,118,117]
+FOREHEAD_LANDMARKS = [54,103,67,109,10, 338, 297, 332, 284, 333,299,337,151,108,69,104,68] # Mediapipe landmarks for forehead
+LEFT_CHEEK_LANDMARKS = [280,346,347,330,266,425,411]    # Mediapipe landmarks for left cheek
+RIGHT_CHEEK_LANDMARKS = [50,123,187,205,36,101,118,117] # Mediapipe landmarks for right cheek
 
 mp_face_mesh = mp.solutions.face_mesh
 mp_face_detection = mp.solutions.face_detection
@@ -48,12 +47,23 @@ def extract_face(frame, box_size=(128,128)):
 
 
 def extract_face_regions(frame, roi = 'FOREHEAD', target_size=(128,128)):
+    '''
+    Function to extract specific regions of interest (ROI) from the face.
+
+    Parameters:
+    frame (np.array)             : A numpy array representing a single frame of the video
+    roi   (str)                  : The region of interest to extract (e.g., 'FOREHEAD', 'LEFT CHEEK', 'RIGHT CHEEK')
+    target_size (tuple(int,int)) : The size to which the extracted region will be resized
+
+    Returns:
+    final_img (np.array)    : The cropped and resized image of the specified ROI
+    roi_landmarks (list)    : The landmarks of the specified ROI
+    '''
     
     with contextlib.redirect_stderr(None):
         with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1,
-                                    refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:
-            results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-            # results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+                                    refine_landmarks=True, min_detection_confidence=0.5) as face_mesh:  # Initialize FaceMesh
+            results = face_mesh.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))  # Process the frame
             if not results.multi_face_landmarks:
                 return None,None
 
@@ -68,28 +78,22 @@ def extract_face_regions(frame, roi = 'FOREHEAD', target_size=(128,128)):
             roi_lm =  RIGHT_CHEEK_LANDMARKS
 
 
-        full_landmarks = results.multi_face_landmarks[0].landmark
+        full_landmarks = results.multi_face_landmarks[0].landmark  # Get all landmarks
         roi_landmarks = landmark_pb2.NormalizedLandmarkList(
             landmark=[full_landmarks[i] for i in roi_lm]
         )
-        # print(roi_landmarks[54],roi_lm)
-        points = [landmarks[i] for i in roi_lm]
+        points = [landmarks[i] for i in roi_lm]     # Get the points for the specified ROI
 
-        # print('**************',points)
-        xs = [int(p.x * w) for p in points]
-        ys = [int(p.y * h) for p in points]
+        xs = [int(p.x * w) for p in points] # Convert normalized x-coordinates to pixel values
+        ys = [int(p.y * h) for p in points] # Convert normalized y-coordinates to pixel values
         x1, x2 = min(xs), max(xs)
         y1, y2 = min(ys), max(ys)
 
-        # print('**************',x1,x2,y1,y2)
-        roi_crop = frame[y1:y2, x1:x2]
+        roi_crop = frame[y1:y2, x1:x2]      # Crop the region of interest from the frame
         
         if roi_crop.size == 0:
             return None, None
-        final_img =  cv2.resize(roi_crop, target_size)
-
-        # del roi_crop, target_size, xs, ys, x1, x2, full_landmarks, results, h, w, _, landmarks, roi, roi_lm, points
-        # gc.collect()
+        final_img =  cv2.resize(roi_crop, target_size)  # Resize the cropped image to the target size
 
         return final_img, roi_landmarks
     

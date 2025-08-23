@@ -4,13 +4,15 @@ from launch.actions import ExecuteProcess
 import os
 
 def generate_launch_description():
+    ''' Generates launch description for the rPPG video node. '''
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     config_dir = os.path.join(base_dir,'config')
 
-    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')
-    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'
+    rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')      # Path to rPPG parameters
+    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python'   # Path to the Python interpreter in the rPPG environment
 
+    # Launch description for the rPPG video node
     launch_desc = LaunchDescription([
         Node(
             package = 'rppg_node',
