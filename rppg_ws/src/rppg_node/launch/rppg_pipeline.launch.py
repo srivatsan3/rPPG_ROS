@@ -1,6 +1,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 import os
+import yaml
 
 def generate_launch_description():
     ''' Generates launch description for the rPPG pipeline with webcam reader and video node. '''
@@ -11,7 +12,9 @@ def generate_launch_description():
     webcam_params = os.path.join(config_dir, 'webcam_params.yaml')  # Path to webcam parameters
     rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')  # Path to rPPG parameters
 
-    python_path = '/home/mscrobotics2425laptop11/rppg_env/bin/python' # Path to the Python interpreter in the rPPG environment
+    with open(rppg_params,'r') as f:
+        data = yaml.load(f, Loader=yaml.SafeLoader)
+    python_path = data['rppg_toolbox_node']['ros__parameters']['python_path']
 
     # Launch description for the webcam reader and rPPG video node
     launch_desc = LaunchDescription([

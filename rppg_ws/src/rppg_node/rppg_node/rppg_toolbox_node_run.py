@@ -7,10 +7,7 @@ from collections import deque
 import mediapipe as mp
 from utils.face_roi_detection import *
 import cv2
-from time import perf_counter
-import os
-import psutil
-import objgraph
+
 
 from utils.rppg_utils import *
 NN_ALGOS = ['physnet','efficientphys','deepphys','bigsmall'] # List of algorithms that use neural networks
@@ -65,7 +62,6 @@ class RPPGToolboxNode(Node):
             self.model.eval() # Set the model to evaluation mode
 
     def frame_callback(self,msg):
-        start = perf_counter()
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8') # Convert ROS Image message to OpenCV format
         if self.roi_area != 'ALL':
             frame_cropped, face_landmarks = extract_face_regions(frame, roi = self.roi_area, target_size=(self.img_width,self.img_height))
@@ -92,10 +88,7 @@ class RPPGToolboxNode(Node):
         cv2.imshow('Face ROI Viewer', frame)
         cv2.waitKey(1)
 
-        print(f"Frame View: {(perf_counter() - start)*1000:.2f} ms")
-
         if len(self.frame_buffer) == self.window_length:   # Check if the buffer is full
-            print(f"Frame View: {(perf_counter() - start)*1000:.2f} ms")
             if self.algo not in NN_ALGOS:                  # If the algorithm is not a neural network
                 bpm = run_rppg(buffer = self.frame_buffer, 
                                fps = self.fps ,

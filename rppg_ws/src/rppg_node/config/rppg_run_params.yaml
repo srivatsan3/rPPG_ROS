@@ -9,6 +9,7 @@ rppg_toolbox_node:
     topic: '/heart_rate_bpm'  # Heart Rate Publish topic
     rppgtb_path: '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'          # rPPG Toolbox Path
     video_path: '/home/mscrobotics2425laptop11/Dissertation/UBFC/RawData/subject1/vid.avi' # Video file path (Only used for video based runs)
+    python_path: '/home/mscrobotics2425laptop11/rppg_env/bin/python' # Python interpretor path
     img_height: 128           # Image height (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
     img_width: 128           # Image width (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
     roi_area: 'all'      # Region of Interest Area ('forehead', 'left cheek', 'right cheek' supported, No multiple values supported)
