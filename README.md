@@ -13,7 +13,7 @@ This repository provides a ROS2-integrated pipeline for remote photoplethysmogra
 
 ---
 
-## Configuration File: (`rppg_urn_params.yaml`)
+## Configuration File: (`rppg_run_params.yaml`)
 
 | Parameter       | Type     | Default / Example Value | Description |
 |----------------|----------|--------------------------|-------------|
