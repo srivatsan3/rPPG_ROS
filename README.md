@@ -60,7 +60,7 @@ Dockerfile_Jazzy
 requirements.txt
 ```
 
-## Configuration File: (`rppg_urn_params.yaml`)
+## Configuration File: (`rppg_run_params.yaml`)
 
 | Parameter       | Type     | Default / Example Value | Description |
 |----------------|----------|--------------------------|-------------|
