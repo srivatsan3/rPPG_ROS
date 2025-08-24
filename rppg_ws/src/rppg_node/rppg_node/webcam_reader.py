@@ -18,11 +18,11 @@ class WebcamBufferPublisherNode(Node):
 
         self.declare_parameter('webcam_id',0)
         self.declare_parameter('frame_rate',30)
-        self.declare_parameter('topic','/camera')
+        self.declare_parameter('camera_topic','/camera')
 
         self.webcam_id = self.get_parameter('webcam_id').get_parameter_value().integer_value
         self.frame_rate = self.get_parameter('frame_rate').get_parameter_value().integer_value
-        self.publish_topic = self.get_parameter('topic').get_parameter_value().string_value
+        self.publish_topic = self.get_parameter('camera_topic').get_parameter_value().string_value
 
 
         self.cap = cv2.VideoCapture(self.webcam_id)

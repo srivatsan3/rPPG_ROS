@@ -8,8 +8,6 @@ def generate_launch_description():
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     config_dir = os.path.join(base_dir,'config')
-
-    webcam_params = os.path.join(config_dir, 'webcam_params.yaml')  # Path to webcam parameters
     rppg_params = os.path.join(config_dir, 'rppg_run_params.yaml')  # Path to rPPG parameters
 
     with open(rppg_params,'r') as f:
@@ -22,7 +20,7 @@ def generate_launch_description():
             package = 'rppg_node',
             executable='webcam_reader',
             name = 'webcam_buffer_publisher_node',
-            parameters = [webcam_params],
+            parameters = [rppg_params],
             output = 'screen',
             prefix=python_path
         ),

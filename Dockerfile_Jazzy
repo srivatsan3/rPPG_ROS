@@ -1,0 +1,67 @@
+# Base image with ROS 2 Humble
+FROM ros:jazzy
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    vim \
+    nano \
+    python3-venv \
+    python3-pip \
+    libgl1 \
+    python3-colcon-common-extensions \
+    git \
+    curl \
+    wget \
+    gnupg2 \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Create and activate Python virtual environment
+RUN python3 -m venv /venv && \
+    . /venv/bin/activate && \
+    pip install --upgrade pip && \
+    pip install \
+        scipy \
+        mediapipe \
+        opencv-python \
+        pyyaml \
+        mat73 \
+        scikit-learn \
+        scikit-image \
+        torch \
+        psutil \
+        objgraph \
+        cv_bridge
+        
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libx11-dev \
+    libxcb1 \
+    libxext6 \
+    libxrender1 \
+    libqt5gui5 \
+    libqt5core5a \
+    libqt5widgets5 \
+    qtbase5-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Source ROS 2 setup on container start
+SHELL ["/bin/bash", "-c"]
+RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+RUN echo "source /venv/bin/activate" >> ~/.bashrc
+
+# Optional: Create workspace
+# Copy rPPG workspace and dissertation toolbox into container
+COPY /rppg_ws /rppg_ws
+COPY /rppgtb /rppgtb
+WORKDIR /rppg_ws
+
+# Default command
+CMD ["bash"]

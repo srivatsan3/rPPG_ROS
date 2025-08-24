@@ -29,6 +29,7 @@ class RPPGToolboxNode(Node):
         self.declare_parameter('topic','/heart_rate_bpm')   # Topic to publish the heart rate in BPM
         self.declare_parameter('algo','deepphys')           # Algorithm to use for rPPG processing
         self.declare_parameter('estimate','fft')            # Method to estimate BPM ('fft' or 'peak')
+        self.declare_parameter('viz',True)
  
         
         self.fps = self.get_parameter('frame_rate').get_parameter_value().integer_value
@@ -38,6 +39,8 @@ class RPPGToolboxNode(Node):
         self.roi_area = self.get_parameter('roi_area').get_parameter_value().string_value
         self.img_width = self.get_parameter('img_width').get_parameter_value().integer_value
         self.img_height = self.get_parameter('img_height').get_parameter_value().integer_value
+        self.viz = self.get_parameter('viz').get_parameter_value().bool_value
+        
 
         self.algo = self.get_parameter('algo').get_parameter_value().string_value
         self.bpm_estimate = self.get_parameter('estimate').get_parameter_value().string_value
@@ -45,7 +48,6 @@ class RPPGToolboxNode(Node):
 
         self.window_length = int(self.fps*self.window_size_s)   # Length of the window in frames
         self.overlap_length = int(self.fps*self.overlap_s)      # Length of the overlap in frames
-
 
         self.subscription = self.create_subscription(Image, self.camera_topic, self.frame_callback, 10) # Subscription to camera topic
         self.publisher_ = self.create_publisher(msg_type = Float32, topic = 'heart_rate_bpm', qos_profile = 10) # Publisher for heart rate
@@ -70,23 +72,25 @@ class RPPGToolboxNode(Node):
 
 
         if frame_cropped is not None:
-            cv2.imshow('face',frame_cropped)
+            if self.viz:
+                cv2.imshow('Region of Interest',frame_cropped)
             if self.roi_area != 'ALL':
-                mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
-                connections=None,
-                landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
-                face_landmarks = None
+                if self.viz:
+                    mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+                    connections=None,
+                    landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
                 del face_landmarks
             else:
-                mp_drawing.draw_detection(frame, detection)
-                detection = None
+                if self.viz:
+                    mp_drawing.draw_detection(frame, detection)
                 del detection
             self.frame_buffer.append(frame_cropped)  
         else:
             self.get_logger().warn("No face detected — skipping frame")
 
-        cv2.imshow('Face ROI Viewer', frame)
-        cv2.waitKey(1)
+        if self.viz:
+            cv2.imshow('Face ROI Viewer', frame)
+            cv2.waitKey(1)
 
         if len(self.frame_buffer) == self.window_length:   # Check if the buffer is full
             if self.algo not in NN_ALGOS:                  # If the algorithm is not a neural network

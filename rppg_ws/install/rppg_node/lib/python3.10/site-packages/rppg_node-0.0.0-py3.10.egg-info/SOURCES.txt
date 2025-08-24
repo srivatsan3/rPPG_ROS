@@ -9,7 +9,6 @@ setup.py
 ../../build/rppg_node/rppg_node.egg-info/top_level.txt
 ../../build/rppg_node/rppg_node.egg-info/zip-safe
 ./rppg_node/__init__.py
-./rppg_node/rppg_node.py
 ./rppg_node/rppg_toolbox_node_run.py
 ./rppg_node/rppg_toolbox_video_node.py
 ./rppg_node/webcam_reader.py
@@ -18,7 +17,6 @@ setup.py
 ./utils/rppg_utils.py
 ./utils/utils.py
 config/rppg_run_params.yaml
-config/webcam_params.yaml
 launch/rppg_pipeline.launch.py
 launch/rppg_pipeline_video.launch.py
 resource/rppg_node

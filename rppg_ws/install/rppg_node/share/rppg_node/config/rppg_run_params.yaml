@@ -1,7 +1,8 @@
 rppg_toolbox_node:
   ros__parameters:
+    webcam_id: 0              # Webcam ID in case webcam pipeline is run
     frame_rate: 30            # Camera FPS (Pass the samee as Webcam's FPS for webcam based runs)
-    algo: 'efficientphys'               # Algorithms supported ('chrom','pos','green','ica','pbv','pbv2','lgi','omit','physnet','efficientphys','deepphys','bigsmall')
+    algo: 'efficientphys'     # Algorithms supported ('chrom','pos','green','ica','pbv','pbv2','lgi','omit','physnet','efficientphys','deepphys','bigsmall')
     estimate: 'fft'           # BPM Esimation ('fft' and 'peak' supported)
     window_secs: 8            # Total Window in seconds (Only integer value supported)
     overlap_secs: 6           # Overlap between two consecutive windows in seconds (Only integer value supported)
@@ -9,6 +10,8 @@ rppg_toolbox_node:
     topic: '/heart_rate_bpm'  # Heart Rate Publish topic
     rppgtb_path: '/home/mscrobotics2425laptop11/Dissertation/rppgtb/rPPG-Toolbox'          # rPPG Toolbox Path
     video_path: '/home/mscrobotics2425laptop11/Dissertation/UBFC/RawData/subject1/vid.avi' # Video file path (Only used for video based runs)
+    python_path: '/home/mscrobotics2425laptop11/rppg_env/bin/python' # Python interpretor path
     img_height: 128           # Image height (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
     img_width: 128           # Image width (Will be resized to 36x36 for DeepPhys and EfficientPhys algorithms due to their pretrained models)
     roi_area: 'all'      # Region of Interest Area ('forehead', 'left cheek', 'right cheek' supported, No multiple values supported)
+    viz: True

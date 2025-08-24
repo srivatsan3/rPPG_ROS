@@ -26,6 +26,7 @@ class RPPGVideoNode(Node):
         self.declare_parameter('img_width', 128)
         self.declare_parameter('img_height', 128)
         self.declare_parameter('roi_area','all')
+        self.declare_parameter('viz',True)
 
         self.declare_parameter('topic','/heart_rate_bpm')
         self.declare_parameter('algo','deepphys')
@@ -39,7 +40,7 @@ class RPPGVideoNode(Node):
         self.img_width = self.get_parameter('img_width').get_parameter_value().integer_value
         self.img_height = self.get_parameter('img_height').get_parameter_value().integer_value
         self.roi_area = self.get_parameter('roi_area').get_parameter_value().string_value
-        
+        self.viz = self.get_parameter('viz').get_parameter_value().bool_value
 
         self.algo = self.get_parameter('algo').get_parameter_value().string_value
         self.bpm_estimate = self.get_parameter('estimate').get_parameter_value().string_value
@@ -72,22 +73,25 @@ class RPPGVideoNode(Node):
                 frame_cropped, detection = extract_face(frame = frame, box_size= (self.img_width, self.img_height))
             if frame_cropped is not None:
                 self.frame_buffer.append(frame_cropped)
-                cv2.imshow('Region of Interest',frame_cropped)
+                if self.viz:
+                    cv2.imshow('Region of Interest',frame_cropped)
 
                 if self.roi_area != 'ALL':
-                    mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
-                    connections=None,
-                    landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
+                    if self.viz:
+                        mp_drawing.draw_landmarks(image = frame, landmark_list=face_landmarks,
+                        connections=None,
+                        landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
                     del face_landmarks
                 else:
-                    mp_drawing.draw_detection(frame, detection)
+                    if self.viz:
+                        mp_drawing.draw_detection(frame, detection)
                     del detection
             else:
                 self.get_logger().warn("No face detected : skipping frame")
 
-
-            cv2.imshow('Face ROI Viewer', frame)
-            cv2.waitKey(1)
+            if self.viz:
+                cv2.imshow('Face ROI Viewer', frame)
+                cv2.waitKey(1)
 
             if len(self.frame_buffer) == self.window_length:
                 try:
