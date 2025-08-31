@@ -75,8 +75,8 @@ requirements.txt
 | `rppgtb_path`   | `str`    | `/home/.../rPPG-Toolbox` | Absolute path to the rPPG Toolbox directory. |
 | `video_path`    | `str`    | `/home/.../vid.avi`      | Path to input video file (used only for video-based runs). |
 | `python_path`   | `str`    | `/home/.../python`       | Path to Python interpreter (e.g. from virtual environment). |
-| `img_height`    | `int`    | `128`                    | RoI height; resized to 72×36 for DeepPhys/EfficientPhys. |
-| `img_width`     | `int`    | `128`                    | RoI width; resized to 72×36 for DeepPhys/EfficientPhys. |
+| `img_height`    | `int`    | `128`                    | RoI height; resized to 72×72 for DeepPhys/EfficientPhys. |
+| `img_width`     | `int`    | `128`                    | RoI width; resized to 72×72 for DeepPhys/EfficientPhys. |
 | `roi_area`      | `str`    | `'all'`                  | Region of Interest. Options: `'forehead'`, `'left cheek'`, `'right cheek'`, `'all'`. |
 | `viz`           | `bool`   | `true`                   | Enable visualization (e.g. `cv2.imshow()`). |
 
